@@ -43,28 +43,28 @@ export default function App() {
   const results = solveCubic();
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-12 font-sans">
-      <div className="max-w-5xl mx-auto space-y-10">
-        <CubicInput 
-          values={values} 
-          setValues={setValues} 
-          onSave={() => setHistory([...history, values])} 
+    <div className="app-layout">
+      <CubicInput 
+        values={values} 
+        setValues={setValues} 
+        onSave={() => setHistory([...history, values])} 
+      />
+      
+      <CubicEquation {...values} />
+
+      <div className="display-grid">
+        <CubicTable 
+          p={results.p} 
+          q={results.q} 
+          delta={results.delta} 
+          roots={results.roots} 
         />
-        
-        <CubicEquation {...values} />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <CubicTable 
-            p={results.p} 
-            q={results.q} 
-            delta={results.delta} 
-            roots={results.roots} 
-          />
-          <CubicGraph values={values} roots={results.roots} />
+        <div className="visual-panel">
+           <CubicGraph values={values} roots={results.roots} />
         </div>
-
-        <CubicHistory history={history} onSelect={(v) => setValues(v)} />
       </div>
+
+      <CubicHistory history={history} onSelect={(v) => setValues(v)} />
     </div>
   );
 }
