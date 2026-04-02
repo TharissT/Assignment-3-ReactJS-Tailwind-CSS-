@@ -1,9 +1,9 @@
-interface Props {
+type Props = {
   a: number;
   b: number;
   c: number;
   d: number;
-}
+};
 
 export const CubicEquation = ({ a, b, c, d }: Props) => {
   return (

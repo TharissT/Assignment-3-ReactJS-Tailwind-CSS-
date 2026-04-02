@@ -13,30 +13,47 @@ export default function App() {
 
   const solveCubic = () => {
     const { a, b, c, d } = values;
-    if (a === 0) return { p: 0, q: 0, delta: 0, roots: ["Error: a=0"] };
+
+    if (a === 0) {
+      return { p: 0, q: 0, delta: 0, roots: ["Error: a=0"] };
+    }
 
     const p = (3 * a * c - b * b) / (3 * a * a);
-    const q = (27 * a * a * d - 9 * a * b * c + 2 * b * b * b) / (27 * a * a * a);
+    const q =
+      (27 * a * a * d - 9 * a * b * c + 2 * b * b * b) /
+      (27 * a * a * a);
     const delta = (q / 2) ** 2 + (p / 3) ** 3;
+
+    const epsilon = 1e-10;
     const h = -b / (3 * a);
 
     let roots: (number | string)[] = [];
-    if (delta < 0) {
+
+    if (delta < -epsilon) {
       const k = 2 * Math.sqrt(-p / 3);
-      const theta = (1 / 3) * Math.acos(-q / (2 * Math.sqrt(Math.pow(-p / 3, 3))));
+
+      const denom = 2 * Math.sqrt(Math.pow(-p / 3, 3));
+      const value = -q / denom;
+
+      const clamped = Math.max(-1, Math.min(1, value));
+      const theta = (1 / 3) * Math.acos(clamped);
+
       roots = [
         k * Math.cos(theta) + h,
         k * Math.cos(theta + (2 * Math.PI) / 3) + h,
         k * Math.cos(theta + (4 * Math.PI) / 3) + h,
       ];
-    } else if (delta > 0) {
+    } else if (delta > epsilon) {
       const u = Math.cbrt(-q / 2 + Math.sqrt(delta));
       const v = Math.cbrt(-q / 2 - Math.sqrt(delta));
+
       roots = [u + v + h, "Complex", "Complex"];
     } else {
-      const r = Math.cbrt(q / 2);
-      roots = [2 * Math.cbrt(-q / 2) + h, r + h, r + h];
+      const u = Math.cbrt(-q / 2);
+
+      roots = [2 * u + h, -u + h, -u + h];
     }
+
     return { p, q, delta, roots };
   };
 
@@ -44,23 +61,23 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      <CubicInput 
-        values={values} 
-        setValues={setValues} 
-        onSave={() => setHistory([...history, values])} 
+      <CubicInput
+        values={values}
+        setValues={setValues}
+        onSave={() => setHistory([...history, values])}
       />
-      
+
       <CubicEquation {...values} />
 
       <div className="display-grid">
-        <CubicTable 
-          p={results.p} 
-          q={results.q} 
-          delta={results.delta} 
-          roots={results.roots} 
+        <CubicTable
+          p={results.p}
+          q={results.q}
+          delta={results.delta}
+          roots={results.roots}
         />
         <div className="visual-panel">
-           <CubicGraph values={values} roots={results.roots} />
+          <CubicGraph values={values} roots={results.roots} />
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-interface Props {
+type Props= {
   p: number;
   q: number;
   delta: number;

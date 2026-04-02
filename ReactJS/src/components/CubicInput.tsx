@@ -1,14 +1,15 @@
 import type { CubicValues } from "../App";
 
-interface Props {
+type Props = {
   values: CubicValues;
   setValues: (v: CubicValues) => void;
   onSave: () => void;
-}
+};
 
 export const CubicInput = ({ values, setValues, onSave }: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [e.target.name]: parseFloat(e.target.value) || 0 });
+    const value = Number.isFinite(e.target.valueAsNumber) ? e.target.valueAsNumber : 0;
+    setValues({ ...values, [e.target.name]: value });
   };
 
   return (
